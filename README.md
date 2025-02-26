@@ -1,4 +1,4 @@
 # sg_urban_data_analysis
-This repository contains code from my research work on cities and urban processes.
+This repository contains code from my research work on cities and urban processes. It currently includes:
 
-I bring you step-by-step through my code so that you can understand how to apply it to your own projects.
+1) Tools to extract data on subsets of companies from Singapore's corporate registry
