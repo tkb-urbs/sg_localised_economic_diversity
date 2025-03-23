@@ -43,6 +43,15 @@ acra_files = ['ACRAInformationonCorporateEntitiesA.csv',
 desired_columns =['entity_status_description',
                  'primary_ssic_code']
 
+# define a function to ensure ACRA data ssic codes that should start with 0, start with 0
+def ssic_cleaner(code):
+    new_code = str(code)
+    if len(new_code) < 5:
+        final_code = '0' + new_code
+    else:
+        final_code = new_code
+    return final_code
+
 # Set up lists to store counts of companies
 all_companies = []
 live_companies = []
@@ -57,7 +66,7 @@ for code in subset:
     
     for file in acra_files:
         temp_df = pd.read_csv(file, usecols = desired_columns)
-        temp_df['primary_ssic_code_str'] = temp_df['primary_ssic_code'].apply(str) # Convert everything to a string to avoid issues with the ssic starting with 0
+        temp_df['primary_ssic_code_str'] = temp_df['primary_ssic_code'].apply(ssic_cleaner) # Convert everything to a string to avoid issues with the ssic starting with 0
         
         # Count all companies that have registered or attempted registration
         count_df = temp_df[temp_df['primary_ssic_code_str'] == code]
@@ -76,3 +85,5 @@ for code in subset:
 
 summary = {'ssic': subset, 'all companies': all_companies, 'live companies': live_companies}
 company_count = pd.DataFrame(summary)
+
+company_count.to_csv('sg_sector_count.csv')
