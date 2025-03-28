@@ -53,10 +53,11 @@ sector_national_count['national_p'] = sector_national_count['live companies']/to
 
 all_subzones = list(company_by_subzone['subzone_name'].unique())
 sg_LQ_data = pd.DataFrame()
+columns = sg_LQ_data.columns
 
 for sz in all_subzones:
     # Filter out all companies in the subzone
-    subzone_companies = company_by_subzone[company_by_subzone['subzone_name'] == sz]
+    subzone_companies = company_by_subzone.loc[company_by_subzone['subzone_name'] == sz, columns]
     subzone_companies['primary_ssic_str'] = company_by_subzone['primary_ssic_code'].apply(ssic_cleaner)
     
     # Create a frequency table and convert to fraction of all companies
