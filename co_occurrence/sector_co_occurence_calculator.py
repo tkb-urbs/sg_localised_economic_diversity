@@ -67,11 +67,43 @@ for sz in all_subzones:
     # Merge national level sector data with subzone sector data
     p_data_table = subzone_freq.merge(sector_national_count[['primary_ssic_str','live companies']], how = 'left', on = 'primary_ssic_str' )
     
-    # Calculate LQ
+    # Calculate probabilities
     p_data_table['sz_p'] = p_data_table['Count']/p_data_table['live companies']
     p_data_table['subzone'] = sz
     
-    # Attach all LQ to larger dataset
+    # Attach all probabilities to a larger daatset
     sector_distribution_data = pd.concat([sector_distribution_data, p_data_table])
 
 sector_distribution_data.to_csv('sg_sector_distribution_data.csv')
+
+# Set up lists/arrays to correlate and measure co-occurrence
+subzone_p_data = pd.read_csv('sg_sector_distribution_data.csv')
+
+# Create lists of sectors and subzones to iterate through
+sectors = list(subzone_p_data['primary_ssic_str'].unique())
+subzones = list(subzone_p_data['subzone'].unique())
+
+# Create a list of probabilities for each sector
+p_list_dict = {}
+
+for sect in sectors:
+    p_list_dict[sect] = []
+
+tracker = 0
+total_sectors = str(len(sectors))
+
+for sect in sectors:
+    tracker += 1 
+    for sz in subzones:
+        # Pull out probability for companies of the specified sector to appear in the specified subzone
+        sect_df = subzone_p_data.loc[(subzone_p_data['primary_ssic_str'] == sect) & (subzone_p_data['subzone'] == sz), ['sz_p']]
+        
+        if len(sect_df) > 0:
+            p = sect_df['sz_p'].iloc[0]
+            p_list_dict[sect].append(p)
+            
+        else:
+            p = 0
+            p_list_dict[sect].append(p)
+           
+    print(str(tracker) + ' sectors out of ' + total_sectors  + ' sectors completed')
