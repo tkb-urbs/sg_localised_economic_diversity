@@ -107,3 +107,11 @@ for sect in sectors:
             p_list_dict[sect].append(p)
            
     print(str(tracker) + ' sectors out of ' + total_sectors  + ' sectors completed')
+
+p_df = pd.DataFrame(p_list_dict)
+p_df.to_csv('computed_p_sector_in_subzones.csv')
+
+sector_p_data = pd.read_csv('computed_p_sector_in_subzones.csv')
+correlation_matrix = sector_p_data.corr()
+correlation_df = pd.DataFrame(correlation_matrix)
+correlation_df.to_csv('sector_cooccurence_matrix.csv')
