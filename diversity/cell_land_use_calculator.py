@@ -11,7 +11,6 @@ import shapely.geometry as geom
 from shapely.geometry import Polygon
 import re
 
-# this set of code sets the boundaries for the grids I want to create
 # file is URA 2019 Masterplan published by URA
 masterplan = gpd.read_file('MasterPlan2019LandUselayer.geojson')
 
@@ -29,11 +28,10 @@ masterplan_svy21['lu_desc'] = masterplan_svy21['Description'].apply(lu_extractor
 # Create list of unqiue land uses
 LU_list= list(masterplan_svy21['lu_desc'].unique())
 
-# set boundaries of all my grids to these bounds
+# set boundaries of all my grids to the bounds of the masterplan
 min_x, min_y, max_x, max_y = masterplan_svy21.total_bounds
 
-# this set of code aims to create grids of differing sizes for analysis
-
+# this set of code aims to create grids with different cell sizes for analysis
 # define a function to create grid with cells of desired size
 # it will take cell size as input and output a geodataframe that can be used or exported
 def grid_generator(cell_length):
