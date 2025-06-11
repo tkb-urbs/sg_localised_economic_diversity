@@ -13,7 +13,7 @@ import re
 
 # this set of code sets the boundaries for the grids I want to create
 # file is URA 2019 Masterplan published by URA
-masterplan = gpd.read_file(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\MasterPlan2019LandUselayer.geojson")
+masterplan = gpd.read_file('MasterPlan2019LandUselayer.geojson')
 
 # ensure file is in SVY21 coordinates system
 masterplan_svy21 = masterplan.to_crs(epsg=3414)
