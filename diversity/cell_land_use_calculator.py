@@ -89,7 +89,9 @@ def lu_calculator(cell_size):
         # iterate through each land use
         for LU in LU_list:
             # Find area taken up by each land use
-            LU_area = sum(cell_LU['lu_desc'] == LU)
+            LU_subset = cell_LU[cell_LU['lu_desc'] == LU]
+            LU_area = sum(LU_subset['area'])
+            
             if LU_area == 0:
                 LU_columns[LU_counter].append(0)
                 LU_counter += 1
