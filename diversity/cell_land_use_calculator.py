@@ -9,8 +9,6 @@ import pandas as pd
 import geopandas as gpd # needed to handle geojson files
 import shapely.geometry as geom
 from shapely.geometry import Polygon
-# import statistics
-# import numpy as np
 import re
 
 # this set of code sets the boundaries for the grids I want to create
