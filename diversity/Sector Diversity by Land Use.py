@@ -39,7 +39,6 @@ sg_companies_svy21 = sg_companies_svy21.drop(['Latitude', 'Longitude'], axis = 1
 # Intersect the firm dataset with the land use dataset
 company_by_LU = gpd.overlay(masterplan_svy21, sg_companies_svy21, how ='intersection', keep_geom_type=False)
 company_by_LU = company_by_LU.drop(['geometry'], axis = 1)
-# company_by_LU = company_by_LU.merge(subzone_SVY21, how = 'left', on = 'subzone_name')
 
 # define functions to deal calculate diversity
 # define a function that returns the natural log of a number and returns 0 if number is 0 or less
