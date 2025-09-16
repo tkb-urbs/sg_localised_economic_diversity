@@ -4,7 +4,7 @@ Created on Sun Jul 13 14:54:24 2025
 
 @author: tkbean
 """
-
+# NOTE: CODE TO ESTIMATE GPR IS NOT WORKING AS INTENDED
 # import all libraries needed to do analysis
 import pandas as pd
 import geopandas as gpd # needed to handle geojson files
