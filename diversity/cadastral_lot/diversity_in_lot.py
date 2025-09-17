@@ -4,7 +4,7 @@ Created on Sun Jul 13 14:54:24 2025
 
 @author: tkbean
 """
-# NOTE: CODE TO ESTIMATE GPR IS NOT WORKING AS INTENDED
+
 # import all libraries needed to do analysis
 import pandas as pd
 import geopandas as gpd # needed to handle geojson files
@@ -38,7 +38,7 @@ def data_editor(df):
     return result_df
 
 # import cadastral lot data from SLA
-cadastral = gpd.read_file(r"SLACadastralLandParcelKML.geojson")
+cadastral = gpd.read_file(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\SLACadastralLandParcelKML.geojson")
 
 # ensure file is in SVY21 coordinates system
 cadastral_svy21 = cadastral.to_crs(epsg=3414)
@@ -46,14 +46,14 @@ cadastral_svy21 = data_editor(cadastral_svy21) # parse description data into sep
 cadastral_svy21['area'] = cadastral_svy21.area # find area of each lot
 
 # import URA 2019 Masterplan published by URA
-masterplan = gpd.read_file(r"MasterPlan2019LandUselayer.geojson")
+masterplan = gpd.read_file(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\MasterPlan2019LandUselayer.geojson")
 
 # ensure file is in SVY21 coordinates system
 masterplan_svy21 = masterplan.to_crs(epsg=3414)
 masterplan_svy21 = data_editor(masterplan_svy21) #parse description data into separate tables
 
 # import data on companies that I need for analysis and convert to gdf in SVY21
-sg_companies = pd.read_csv(r"sg_all_companies_geocoded.csv")
+sg_companies = pd.read_csv(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\sg_all_companies_geocoded.csv")
 sg_companies_gdf = gpd.GeoDataFrame(sg_companies, geometry=gpd.points_from_xy(sg_companies.Longitude, sg_companies.Latitude), crs="EPSG:4326")
 sg_companies_svy21 = sg_companies_gdf.to_crs(epsg=3414)
 sg_companies_svy21 = sg_companies_svy21.drop(['Latitude', 'Longitude'], axis = 1)
@@ -133,13 +133,8 @@ cadastral_mp = cadastral_mp.drop(['geometry'], axis = 1)
 # If there are some numerical data, remove non-numerical data and assign mean as GPR
 def GPR_estimator(lk):
     lot_info = cadastral_mp[cadastral_mp['LOT_KEY'] == lk]
-    GPR_num = lot_info[lot_info.GPR.astype(str).str.isdigit()]
-    
-    if GPR_num.shape[0]>0:
-        mean_GPR = st.mean(GPR_num['GPR'])
-        return mean_GPR
-    else:
-        return "NA"
+    return st.mode(lot_info['GPR'])
+
 
 def LU_estimator(lk):
     lot_info = cadastral_mp[cadastral_mp['LOT_KEY'] == lk]
