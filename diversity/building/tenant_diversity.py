@@ -9,17 +9,11 @@ Created on Tue Sep 16 15:39:07 2025
 import pandas as pd
 import geopandas as gpd # needed to handle geojson files
 import numpy as np
-import shapely.geometry as geom
-from shapely.geometry import Polygon
 import statistics as st
-import re
 from bs4 import BeautifulSoup
 
-# most of the data uses html tables to store data within the geojson
-# these functions help seperate it out into columns
-
 # import building data from OSM
-buildings = gpd.read_file(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\sg_buildings.geojson")
+buildings = gpd.read_file(r"sg_buildings.geojson")
 
 # ensure file is in SVY21 coordinates system
 buildings_selcols = buildings[["id", "geometry"]]
@@ -49,14 +43,14 @@ def data_editor(df):
     return result_df
 
 # import URA 2019 Masterplan published by URA
-masterplan = gpd.read_file(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\MasterPlan2019LandUselayer.geojson")
+masterplan = gpd.read_file(r"MasterPlan2019LandUselayer.geojson")
 
 # ensure file is in SVY21 coordinates system
 masterplan_svy21 = masterplan.to_crs(epsg=3414)
 masterplan_svy21 = data_editor(masterplan_svy21) #parse description data into separate tables
 
 # import data on companies that I need for analysis and convert to gdf in SVY21
-sg_companies = pd.read_csv(r"C:\Users\tkbean\Documents\2 Research\5 Ubi Project\0a Python Analysis of QGIS Grid\sg_all_companies_geocoded.csv")
+sg_companies = pd.read_csv(r"sg_all_companies_geocoded.csv")
 sg_companies_gdf = gpd.GeoDataFrame(sg_companies, geometry=gpd.points_from_xy(sg_companies.Longitude, sg_companies.Latitude), crs="EPSG:4326")
 sg_companies_svy21 = sg_companies_gdf.to_crs(epsg=3414)
 sg_companies_svy21 = sg_companies_svy21.drop(['Latitude', 'Longitude'], axis = 1)
