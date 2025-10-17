@@ -59,9 +59,13 @@ def road_selector(subzone_name):
     subzone_roads = list(subzone_roads.RD_NAME.unique()) # need to do this as road dataset includes segments of the same road
     return subzone_roads
 
-# function to get coordinates from OneMap by Shawn Tham. This will not work after June 2025 as OneMap will require token authentication.
+# function to get coordinates from OneMap by Shawn Tham
+# OneMap API key for geocoding
+key = 'your API key'
+headers = {'Authorization': key}
+
 def getcoordinates(address):
-    req = requests.get('https://www.onemap.gov.sg/api/common/elastic/search?searchVal='+address+'&returnGeom=Y&getAddrDetails=Y&pageNum=1')
+    req = requests.get('https://www.onemap.gov.sg/api/common/elastic/search?searchVal='+address+'&returnGeom=Y&getAddrDetails=Y&pageNum=1', headers = headers)
     resultsdict = eval(req.text)
     if len(resultsdict['results'])>0:
         return resultsdict['results'][0]['LATITUDE'], resultsdict['results'][0]['LONGITUDE']
