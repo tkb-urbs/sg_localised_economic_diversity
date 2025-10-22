@@ -67,13 +67,18 @@ est_LU = []
 
 for bdg in bdg_list:
     bdg_info = building_mp[building_mp['id'] == bdg]
-    bdg_info.dropna()
+    bdg_info.dropna(inplace = True)
     
-    new_GPR = GPR_estimator(bdg_info)
-    est_GPR.append(new_GPR)
+    if bdg_info.shape[0] > 0:
+        new_GPR = GPR_estimator(bdg_info) 
+        est_GPR.append(new_GPR)
     
-    new_LU = LU_estimator(bdg_info)
-    est_LU.append(new_LU)
+        new_LU = LU_estimator(bdg_info)
+        est_LU.append(new_LU)
+        
+    else:
+        est_GPR.append('NA')
+        est_LU.append('NA')
     
 # put estimated lot data from masterplan in data frame
 dict = {'building_id':bdg_list,
@@ -83,7 +88,7 @@ dict = {'building_id':bdg_list,
 mp_data = pd.DataFrame(dict)
 
 # merge all data on each lot together
-full_bdg_data = pd.merge(buildings_svy21, mp_data, how='left', on='building_id')
+full_bdg_data = pd.merge(buildings_svy21, mp_data, how='left', left_on='id', right_on='building_id')
 
 # export data as geojson
 full_bdg_data.to_file("building_masterplan_data.geojson", driver = 'GeoJSON')
