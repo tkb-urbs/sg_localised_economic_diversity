@@ -55,23 +55,24 @@ building_mp = building_mp.drop(['geometry'], axis = 1)
 # work through each lot to assign a single value. 
 # If all data are strings, assign GPR "not specified". 
 # If there are some numerical data, remove non-numerical data and assign mean as GPR
-def GPR_estimator(bdg):
-    bdg_info = building_mp[building_mp['id'] == bdg]
+def GPR_estimator(bdg_info):
     return st.mode(bdg_info['GPR'])
 
-def LU_estimator(bdg):
-    bdg_info = building_mp[building_mp['id'] == bdg]
+def LU_estimator(bdg_info):
     return st.mode(bdg_info['LU_DESC'])
 
 bdg_list= list(buildings_svy21['id'].unique())
 est_GPR = []
 est_LU = []
 
-for b in bdg_list:
-    new_GPR = GPR_estimator(b)
+for bdg in bdg_list:
+    bdg_info = building_mp[building_mp['id'] == bdg]
+    bdg_info.dropna()
+    
+    new_GPR = GPR_estimator(bdg_info)
     est_GPR.append(new_GPR)
     
-    new_LU = LU_estimator(b)
+    new_LU = LU_estimator(bdg_info)
     est_LU.append(new_LU)
     
 # put estimated lot data from masterplan in data frame
