@@ -18,7 +18,7 @@ buildings = gpd.read_file(r"sg_buildings.geojson")
 # ensure file is in SVY21 coordinates system
 buildings_selcols = buildings[["id", "geometry"]]
 buildings_svy21 = buildings_selcols.to_crs(epsg=3414)
-buildings_svy21['footprint'] = buildings_svy21.area # find area of each lot
+buildings_svy21['footprint'] = buildings_svy21.area # find area of each building
 
 # the masterplan uses html tables to store data within the geojson
 # these functions help seperate it out into columns
