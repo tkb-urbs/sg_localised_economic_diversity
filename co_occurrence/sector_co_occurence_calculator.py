@@ -1,11 +1,6 @@
 # Import libraries needed for data processing
 import pandas as pd
 import geopandas as gpd # needed to handle geojson files
-import shapely.geometry as geom
-from shapely.geometry import Polygon
-import statistics
-import numpy as np
-import scipy.stats
 import re
 
 # Import data needed for processing location quotient
