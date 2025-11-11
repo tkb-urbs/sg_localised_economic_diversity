@@ -55,7 +55,7 @@ sg_companies_gdf = gpd.GeoDataFrame(sg_companies, geometry=gpd.points_from_xy(sg
 sg_companies_svy21 = sg_companies_gdf.to_crs(epsg=3414)
 sg_companies_svy21 = sg_companies_svy21.drop(['Latitude', 'Longitude'], axis = 1)
 
-# Intersect the cadastral lots with the company dataset
+# Intersect the buildings with the company dataset
 building_companies = gpd.overlay(buildings_svy21, sg_companies_svy21, how ='intersection', keep_geom_type=False)
 building_companies = building_companies.drop(['geometry'], axis = 1)
 
@@ -99,7 +99,7 @@ def sector_equitability_calculator(d_index, bdg):
         E = 1
     return E
 
-# Calculate diversity for each land use and export csv
+# Calculate diversity for each building and export csv
 # Create list of unqiue land uses
 bdg_list= list(building_companies['id'].unique())
 sect_diversity = []
@@ -123,7 +123,7 @@ building_data = pd.DataFrame(dict)
 
 # merge building geometry to building id and export this data first
 
-# intersect buildings with masterplan to include masterplan information in cadastral lots
+# intersect buildings with masterplan to include masterplan information
 building_mp = gpd.overlay(buildings_svy21, masterplan_svy21, how ='intersection', keep_geom_type=False)
 building_mp = building_mp.drop(['geometry'], axis = 1)
 
@@ -136,7 +136,13 @@ def GPR_estimator(bdg):
 
 def LU_estimator(bdg):
     bdg_info = building_mp[building_mp['id'] == bdg]
-    return st.mode(bdg_info['LU_DESC'])
+    
+    if st.mode(bdg_info['LU_DESC']) == 'ROAD':
+        new_bdg_info = bdg_info[~bdg_info['LU_DESC'] == 'ROAD']
+        return st.mode(new_bdg_info['LU_DESC'])
+     
+    else:
+        return st.mode(bdg_info['LU_DESC'])
 
 bdg_list= list(building_companies['id'].unique())
 est_GPR = []
@@ -149,7 +155,7 @@ for b in bdg_list:
     new_LU = LU_estimator(b)
     est_LU.append(new_LU)
     
-# put estimated lot data from masterplan in data frame
+# put estimated building data from masterplan in data frame
 dict = {'building_id':bdg_list,
        'est_GPR':est_GPR,
        'est_LU':est_LU}
